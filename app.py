@@ -7,11 +7,14 @@ app=Flask(__name__)
 
 Elastic_model=pickle.load(open('models/F1Elastic.pkl',"rb"))
 scaler=pickle.load(open('models/F1Scaler.pkl',"rb"))
+pitscaler=pickle.load(open('models/Pitscaler.pkl','rb'))
+pitmodel=pickle.load(open('models/PitModel.pkl','rb'))
 
+@app.route("/",methods=["GET"])
+def render():
+    return render_template("home.html")
 
-
-
-@app.route("/",methods=["GET","POST"])
+@app.route("/predictLaptime",methods=["GET","POST"])
 def predicted_data():
     if request.method=="POST":
         LapNumber=float(request.form.get("LapNumber"))
@@ -36,11 +39,49 @@ def predicted_data():
         corr=pd.to_timedelta(predicted[0],unit='s')
         adjusted_time = corr - pd.to_timedelta("00:00:10")
         main_time=str(adjusted_time).split(" ")[-1]
-        return render_template("result.html", result=main_time)
+        return render_template("laptimeresult.html", result=main_time)
 
 
     else:
-        return render_template("home.html")
+        return render_template("laptimeform.html")
+
+@app.route("/PitPrediction",methods=["GET","POST"])
+def pitprediction():
+    if request.method=="POST":
+        LapNumber=float(request.form.get("LapNumber"))
+        Race=float(request.form.get("Race"))
+        LapTime=float(request.form.get("LapTime"))
+        Compound=float(request.form.get("Compound"))
+        Tyreage=float(request.form.get("Tyreage"))
+        
+        TrackStatus=float(request.form.get("TrackStatus"))
+        
+       
+        Driver=float(request.form.get("Driver"))
+        Position=float(request.form.get("Position"))
+        sample_pit10 = pd.DataFrame([{
+                        'race': Race,
+                        'driver': Driver,
+                        'lap_number': LapNumber,
+                        'compound': Compound,
+                        'tyre_age': Tyreage,
+                        'track_status': TrackStatus,
+                        'position': Position,
+                        'lap_time': LapTime,
+                                }])         
+        
+        
+        scaled_data1=pitscaler.transform(sample_pit10)
+        predicted1=pitmodel.predict(scaled_data1)
+        if predicted1[0]== 1:
+            result="Pit in this lap"
+        else:
+            result="Not in this lap"    
+        return render_template("pitresult.html", result=result)
+    else:
+        return render_template("pitform.html")
+
+
 
 
 

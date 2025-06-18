@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>F1 Lap Time Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            background-image: url('https://wallpaperaccess.com/full/1241631.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid red;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-box {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px 60px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255,0,0,0.8);
+            display: none; /* Initially hidden */
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        .lap-time {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00ffcc;
+            margin: 20px 0;
+        }
+
+        .back-button {
+            background-color: #ff0000;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .back-button:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div id="loader" class="loader"></div>
+
+    <div id="resultBox" class="result-box">
+        <h1>Predicted Lap Time</h1>
+        <div class="lap-time">{{ result }}</div>
+        <form action="/predictLaptime" method="get">
+            <button class="back-button">🏁 Back to Prediction Form</button>
+        </form>
+    </div>
+
+    <script>
+        // Show loader first, then show result after 3 seconds
+        window.onload = function () {
+            setTimeout(function () {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("resultBox").style.display = "block";
+            }, 3000); // 3 seconds
+        };
+    </script>
+</body>
+</html>

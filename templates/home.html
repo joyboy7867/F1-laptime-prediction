@@ -2,171 +2,114 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>F1 Lap Time Predictor</title>
+  <title>F1 AI Predictor</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
+      margin: 0;
       font-family: 'Orbitron', sans-serif;
-      color: white;
-      background: black;
-    }
-
-    /* Full screen background video */
-    #bg-video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      min-width: 100vw;
-      min-height: 100vh;
-      object-fit: cover;
-      z-index: -1;
-      filter: brightness(0.4);
-    }
-
-    .content-wrapper {
-      min-height: 100vh;
-      overflow-y: auto;
-      padding: 40px 20px 80px;
-    }
-
-    .form-container {
-      background-color: rgba(0, 0, 0, 0.85);
-      max-width: 700px;
-      margin: auto;
-      padding: 2rem 3rem;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #ff1e00;
-    }
-
-    h1 {
-      text-align: center;
-      color: #ff1e00;
-      margin-bottom: 1.5rem;
-    }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      border-radius: 8px;
-      border: none;
-      font-size: 1rem;
-    }
-
-    .submit-btn {
-      background-color: #ff1e00;
+      background: linear-gradient(to right, #000000, #1a1a1a);
       color: #fff;
-      font-weight: bold;
-      border: none;
-      padding: 0.75rem 1rem;
-      margin-top: 2rem;
-      border-radius: 10px;
-      cursor: pointer;
-      width: 100%;
-      transition: 0.3s ease;
     }
 
-    .submit-btn:hover {
-      background-color: #d11900;
+    .navbar {
+      background-color: #111;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid red;
     }
 
-    h2 {
-      text-align: center;
+    .navbar a {
       color: #ff1e00;
-      margin-top: 2rem;
+      text-decoration: none;
+      font-size: 1.1rem;
+      margin-left: 2rem;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: #fff;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      color: #ff1e00;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .card {
+      background-color: #1c1c1c;
+      border: 1px solid #ff1e00;
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 900px;
+      box-shadow: 0 0 20px rgba(255, 30, 0, 0.4);
+    }
+
+    .card h2 {
+      color: #ff1e00;
+      margin-bottom: 1rem;
+    }
+
+    .card ul {
+      list-style-type: square;
+      padding-left: 1.5rem;
     }
 
     footer {
       text-align: center;
-      padding: 10px;
+      padding: 20px;
       background-color: #111;
       color: #fff;
-      position: relative;
-      bottom: 0;
-      width: 100%;
+      margin-top: 50px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Background video -->
-  <video autoplay muted loop id="bg-video">
-    <source src="https://cdn.pixabay.com/video/2023/05/31/167349-831179101_large.mp4" type="video/mp4">
-    Your browser does not support HTML5 video.
-  </video>
-
-  <!-- Content wrapper -->
-  <div class="content-wrapper">
-    <div class="form-container">
-      <h1>🏁 F1 Lap Time Predictor</h1>
-      <form action="{{url_for('predicted_data')}}" method="post">
-        <label for="LapNumber">Lap Number</label>
-        <input type="number" name="LapNumber" required>
-
-        <label for="Stint">Stint</label>
-        <input type="number" name="Stint" required>
-
-        <label for="SpeedI2">Speed I2</label>
-        <input type="number" name="SpeedI2" step="any" required>
-
-        <label for="SpeedFL">Speed FL</label>
-        <input type="number" name="SpeedFL" step="any" required>
-
-        <label for="SpeedST">Speed ST</label>
-        <input type="number" name="SpeedST" step="any" required>
-
-        <label for="Compound">Compound</label>
-        <select name="Compound" required>
-          <option value=0>Soft</option>
-          <option value=1>Medium</option>
-          <option value=2>Hard</option>
-        </select>
-
-        <label for="TyreLife">Tyre Life</label>
-        <input type="number" name="TyreLife" required>
-
-        <label for="FreshTyre">Fresh Tyre (1 for Yes, 0 for No)</label>
-        <input type="number" name="FreshTyre" min="0" max="1" required>
-
-        <label for="Team">Team (0-9)</label>
-        <input type="number" name="Team" min="0" max="9" required>
-
-        <label for="TrackStatus">Track Status</label>
-        <input type="number" name="TrackStatus" required>
-
-        <label for="IsAccurate">Is Accurate (1 or 0)</label>
-        <input type="number" name="IsAccurate" min="0" max="1" required>
-
-        <label for="Driver">Driver (ID 0-19)</label>
-        <input type="number" name="Driver" required>
-
-        <label for="Position">Position</label>
-        <input type="number" name="Position" required>
-
-        <button class="submit-btn" type="submit">Predict Lap Time</button>
-      </form>
+  <div class="navbar">
+    <div style="color:#fff; font-size: 1.5rem;">🏁 F1 AI Predictor</div>
+    <div>
+      <a href="{{ url_for('predicted_data') }}">Predict Lap Time</a>
+      <a href="{{ url_for('pitprediction') }}">Pit Prediction</a>
     </div>
-
-    {% if result %}
-      <h2>Predicted Lap Time: {{ result }}</h2>
-    {% endif %}
   </div>
 
-  <!-- Footer -->
+  <div class="hero">
+    <h1>Formula 1 Lap Time & Pit Stop Predictor</h1>
+    <p>
+      Welcome to the F1 AI Predictor – a machine learning-powered tool to estimate Formula 1 lap times and suggest strategic pit stops based on real racing parameters. 
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Project Overview</h2>
+    <ul>
+      <li><strong>Lap Time Model:</strong> ElasticNet Regression (high accuracy on track data)</li>
+      <li><strong>Pit Stop Model:</strong> Logistic Regression with Class Weight Tuning</li>
+      <li><strong>Preprocessing:</strong> Scikit-Learn's StandardScaler</li>
+      <li><strong>UI:</strong> Flask + Custom HTML/CSS with F1 design</li>
+      <li><strong>Data:</strong> Telemetry-style race data including tyre age, compound, driver, and lap number</li>
+    </ul>
+  </div>
+
   <footer>
-    <p>&copy; 2025 Amaan Shaikh</p>
+    &copy; 2025 Amaan Shaikh | Built for Formula 1 Strategy Simulation
   </footer>
 
 </body>

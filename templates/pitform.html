@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>F1 Pit Prediction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+      background: black;
+    }
+
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100vw;
+      min-height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.4);
+    }
+
+    .content-wrapper {
+      min-height: 100vh;
+      overflow-y: auto;
+      padding: 40px 20px 80px;
+    }
+
+    .form-container {
+      background-color: rgba(0, 0, 0, 0.85);
+      max-width: 700px;
+      margin: auto;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #ff1e00;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff1e00;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .submit-btn {
+      background-color: #ff1e00;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      padding: 0.75rem 1rem;
+      margin-top: 2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: #d11900;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff1e00;
+      margin-top: 2rem;
+    }
+    .home-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #ff0044;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
+    transition: background-color 0.3s ease;
+    }
+
+    .home-button:hover {
+        background-color: #cc0033;}
+
+        footer {
+          text-align: center;
+          padding: 10px;
+          background-color: #111;
+          color: #fff;
+          position: relative;
+          bottom: 0;
+          width: 100%;
+        }
+  </style>
+</head>
+<body>
+  <a href="/" class="home-button">🏠 Home</a>
+  <!-- Background video -->
+  <video autoplay muted loop id="bg-video">
+    <source src="https://cdn.pixabay.com/video/2023/05/31/167349-831179101_large.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+  <!-- Content -->
+  <div class="content-wrapper">
+    <div class="form-container">
+      <h1>🚥 F1 Pit Stop Predictor</h1>
+      <form action="{{url_for('pitprediction')}}" method="post">
+        <label for="Race">Race</label>
+        <input type="number" name="Race" min="0" max="21" required>
+
+        
+
+        <label for="Driver">Driver ID</label>
+        <input type="number" name="Driver" min="0" max="23" required>
+
+        <label for="LapNumber">Lap Number</label>
+        <input type="number" name="LapNumber" min="1" max="70" required>
+
+        <label for="Compound">Tyre Compound</label>
+        <select name="Compound" required>
+          <option value="1">Medium</option>
+          <option value="0">Soft</option>
+          <option value="2">Hard</option>
+        </select>
+
+        <label for="Tyreage">Tyre Age</label>
+        <input type="number" name="Tyreage" min="0" max="70" required>
+
+        <label for="TrackStatus">Track Status</label>
+        <input type="number" name="TrackStatus" min="1" max="5" required>
+
+        <label for="Position">Position</label>
+        <input type="number" name="Position" min="1" max="20" required>
+
+        <label for="LapTime">Lap Time (sec)</label>
+        <input type="number" name="LapTime" step="any" required>
+
+        <button class="submit-btn" type="submit">Predict Pit Stop</button>
+      </form>
+    </div>
+
+    {% if result %}
+      <h2>🚩 Pit Decision: {{ result }}</h2>
+    {% endif %}
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Amaan Shaikh</p>
+  </footer>
+
+</body>
+</html>

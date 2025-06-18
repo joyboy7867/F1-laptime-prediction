@@ -40,7 +40,7 @@
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 0 20px rgba(255,0,0,0.8);
-            display: none; /* Initially hidden */
+            display: none;
         }
 
         h1 {
@@ -52,6 +52,12 @@
             font-weight: bold;
             color: #00ffcc;
             margin: 20px 0;
+        }
+
+        .pit-message {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 10px;
         }
 
         .back-button {
@@ -75,20 +81,23 @@
     <div id="loader" class="loader"></div>
 
     <div id="resultBox" class="result-box">
-        <h1>Predicted Lap Time</h1>
+        <h1>Should Pit or Not (Prediction)</h1>
         <div class="lap-time">{{ result }}</div>
-        <form action="/" method="get">
-            <button class="back-button">🏁 Back to Prediction Form</button>
+        <div id="pitMessage" class="pit-message"></div>
+
+        <form action="/PitPrediction" method="get">
+            <button class="back-button">🏁 Back to Pit Form</button>
         </form>
     </div>
 
     <script>
-        // Show loader first, then show result after 3 seconds
         window.onload = function () {
             setTimeout(function () {
                 document.getElementById("loader").style.display = "none";
                 document.getElementById("resultBox").style.display = "block";
-            }, 3000); // 3 seconds
+
+               
+            }, 3000);
         };
     </script>
 </body>
